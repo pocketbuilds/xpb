@@ -1,0 +1,33 @@
+package {{ .Name }}
+
+import (
+	"github.com/PocketBuilds/xpb"
+	"github.com/pocketbase/pocketbase/core"
+)
+
+type Plugin struct {}
+
+func init() {
+	xpb.Register(&Plugin{})
+}
+
+// Name implements xpb.Plugin.
+func (p *Plugin) Name() string {
+	return "{{ .Name }}"
+}
+
+// Version implements xpb.Plugin.
+func (p *Plugin) Version() string {
+	panic("unimplemented")
+}
+
+// Description implements xpb.Plugin.
+func (p *Plugin) Description() string {
+	panic("unimplemented")
+}
+
+// Init implements xpb.Plugin.
+func (p *Plugin) Init(app core.App) error {
+	panic("unimplemented")
+}
+

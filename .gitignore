@@ -1,0 +1,7 @@
+test/
+bin/
+pocketbase
+pb_data
+
+# Added by goreleaser init:
+dist/
