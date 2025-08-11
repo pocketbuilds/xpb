@@ -20,6 +20,7 @@ var BuildCmd = func() *cobra.Command {
 		arch    = runtime.GOARCH
 		osArg   = runtime.GOOS
 		ldflags = []string{}
+		dir     = ""
 	)
 
 	cmd := &cobra.Command{
@@ -43,6 +44,10 @@ var BuildCmd = func() *cobra.Command {
 				opts = append(opts, builder.WithPbVersion(args[0]))
 			} else if v := os.Getenv("XPB__PB_VERSION"); v != "" {
 				opts = append(opts, builder.WithPbVersion(v))
+			}
+
+			if dir != "" {
+				opts = append(opts, builder.WithBuildDir(dir))
 			}
 
 			if config != "" {
@@ -77,6 +82,7 @@ var BuildCmd = func() *cobra.Command {
 	cmd.Flags().StringVar(&arch, "arch", arch, "build target architecture")
 	cmd.Flags().StringVar(&osArg, "os", osArg, "build target operating system")
 	cmd.Flags().StringArrayVar(&ldflags, "ldflag", ldflags, "ldflags")
+	cmd.Flags().StringVar(&dir, "dir", dir, "the directory the builder will use to build the go project (for debugging mostly)")
 
 	return cmd
 }()
