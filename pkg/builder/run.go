@@ -14,7 +14,7 @@ import (
 
 func (b *Builder) Build() (r io.ReadCloser, err error) {
 
-	binFilePath := path.Join(b.dir, "pocketbase")
+	const binFileName = "pocketbase"
 
 	steps := []func() error{
 		b.copyBuildTemplate,
@@ -23,7 +23,7 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 		b.runGoModTidy,
 		b.runGoGetPocketbaseAtSpecifiedVersion,
 		b.runGoGetXpbAtSpecifiedVersion,
-		b.runGoBuild(binFilePath),
+		b.runGoBuild(binFileName),
 	}
 
 	for _, runStep := range steps {
@@ -32,7 +32,7 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 		}
 	}
 
-	return b.buildResult(binFilePath)
+	return b.buildResult(path.Join(b.dir, binFileName))
 }
 
 func (b *Builder) copyBuildTemplate() error {
@@ -152,23 +152,42 @@ func (b *Builder) runGoGetXpbAtSpecifiedVersion() error {
 	return nil
 }
 
-func (b *Builder) runGoBuild(binFilePath string) func() error {
+func (b *Builder) runGoBuild(filename string) func() error {
 	return func() error {
 		args := []string{
 			"build",
-			"-o", binFilePath,
+			"-o", filename,
 		}
 		if len(b.Tags) != 0 {
 			args = append(args,
 				"-tags", strings.Join(b.Tags, ","),
 			)
 		}
+		b.LdFlags = append(b.LdFlags,
+			fmt.Sprintf("-X %s.version=%s", b.Xpb.Module, b.Xpb.Version),
+			fmt.Sprintf("-X %s.Version=%s", b.Pocketbase.Module, b.Pocketbase.Version),
+		)
+		for _, p := range b.Plugins {
+			cmd := b.newCommand("go", "list", "-m", "all")
+			cmd.Stdout = nil
+			output, err := cmd.Output()
+			if err != nil {
+				return err
+			}
+			re, err := regexp.Compile(p.Module + " (.+)")
+			if err != nil {
+				return err
+			}
+			match := re.FindStringSubmatch(string(output))
+			if len(match) > 1 {
+				p.Version = match[1]
+			}
+			b.LdFlags = append(b.LdFlags,
+				fmt.Sprintf("-X '%s.version=%s'", p.Module, p.Version),
+			)
+		}
 		args = append(args,
-			"-ldflags", strings.Join(
-				append(b.LdFlags,
-					fmt.Sprintf("-X %s.version=%s", b.Xpb.Module, b.Xpb.Version),
-					fmt.Sprintf("-X %s.Version=%s", b.Pocketbase.Module, b.Pocketbase.Version),
-				), " "),
+			"-ldflags", strings.Join(b.LdFlags, " "),
 		)
 		cmd := b.newCommand("go", args...)
 		cmd.Env = append(os.Environ(),

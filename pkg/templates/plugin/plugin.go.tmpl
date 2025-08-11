@@ -16,9 +16,12 @@ func (p *Plugin) Name() string {
 	return "{{ .Name }}"
 }
 
+// This variable will automatically be set at build time by xpb
+var version string
+
 // Version implements xpb.Plugin.
 func (p *Plugin) Version() string {
-	panic("unimplemented")
+	return version
 }
 
 // Description implements xpb.Plugin.

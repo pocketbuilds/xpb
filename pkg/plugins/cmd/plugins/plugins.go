@@ -63,7 +63,11 @@ func (p *Plugin) Init(app core.App) error {
 
 		fmt.Println("> Plugins")
 		for _, plugin := range plugins {
-			fmt.Printf("  - %s (%s)\n", plugin.Name(), plugin.Version())
+			if version := plugin.Version(); version != "" {
+				fmt.Printf("  - %s (%s)\n", plugin.Name(), version)
+			} else {
+				fmt.Printf("  - %s\n", plugin.Name())
+			}
 		}
 		return nil
 	}
