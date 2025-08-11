@@ -23,6 +23,9 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 		b.runGoModTidy,
 		b.runGoGetPocketbaseAtSpecifiedVersion,
 		b.runGoGetXpbAtSpecifiedVersion,
+		b.addPocketbaseVersionLdFlag,
+		b.addXpbVersionLdFlag,
+		b.addPluginVersionsLdFlag,
 		b.runGoBuild(binFileName),
 	}
 
@@ -98,19 +101,6 @@ func (b *Builder) runGoGetPocketbaseAtSpecifiedVersion() error {
 		if err := cmd.Run(); err != nil {
 			return err
 		}
-	} else {
-		cmd := b.newCommand("go", "list", "-m", "all")
-		fmt.Fprintf(b.stdout, "%s\n", cmd)
-		cmd.Stdout = nil
-		output, err := cmd.Output()
-		if err != nil {
-			return err
-		}
-		re := regexp.MustCompile(module.PocketbaseModule + " (.+)")
-		match := re.FindStringSubmatch(string(output))
-		if len(match) > 1 {
-			b.Pocketbase.Version = match[1]
-		}
 	}
 	return nil
 }
@@ -152,6 +142,71 @@ func (b *Builder) runGoGetXpbAtSpecifiedVersion() error {
 	return nil
 }
 
+func (b *Builder) addPocketbaseVersionLdFlag() error {
+	cmd := b.newCommand("go", "list", "-m", "all")
+	cmd.Stdout = nil
+	output, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	re, err := regexp.Compile(b.Pocketbase.Module + " (.+)")
+	if err != nil {
+		return err
+	}
+	match := re.FindStringSubmatch(string(output))
+	if match == nil {
+		return nil
+	}
+	b.LdFlags = append(b.LdFlags,
+		fmt.Sprintf("-X '%s.version=%s'", b.Pocketbase.Module, match[1]),
+	)
+	return nil
+}
+
+func (b *Builder) addXpbVersionLdFlag() error {
+	cmd := b.newCommand("go", "list", "-m", "all")
+	cmd.Stdout = nil
+	output, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	re, err := regexp.Compile(b.Xpb.Module + " (.+)")
+	if err != nil {
+		return err
+	}
+	match := re.FindStringSubmatch(string(output))
+	if match == nil {
+		return nil
+	}
+	b.LdFlags = append(b.LdFlags,
+		fmt.Sprintf("-X '%s.version=%s'", b.Xpb.Module, match[1]),
+	)
+	return nil
+}
+
+func (b *Builder) addPluginVersionsLdFlag() error {
+	cmd := b.newCommand("go", "list", "-m", "all")
+	cmd.Stdout = nil
+	output, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	for _, p := range b.Plugins {
+		re, err := regexp.Compile(p.Module + " (.+)")
+		if err != nil {
+			return err
+		}
+		match := re.FindStringSubmatch(string(output))
+		if match == nil {
+			continue
+		}
+		b.LdFlags = append(b.LdFlags,
+			fmt.Sprintf("-X '%s.version=%s'", p.Module, match[1]),
+		)
+	}
+	return nil
+}
+
 func (b *Builder) runGoBuild(filename string) func() error {
 	return func() error {
 		args := []string{
@@ -161,29 +216,6 @@ func (b *Builder) runGoBuild(filename string) func() error {
 		if len(b.Tags) != 0 {
 			args = append(args,
 				"-tags", strings.Join(b.Tags, ","),
-			)
-		}
-		b.LdFlags = append(b.LdFlags,
-			fmt.Sprintf("-X %s.version=%s", b.Xpb.Module, b.Xpb.Version),
-			fmt.Sprintf("-X %s.Version=%s", b.Pocketbase.Module, b.Pocketbase.Version),
-		)
-		for _, p := range b.Plugins {
-			cmd := b.newCommand("go", "list", "-m", "all")
-			cmd.Stdout = nil
-			output, err := cmd.Output()
-			if err != nil {
-				return err
-			}
-			re, err := regexp.Compile(p.Module + " (.+)")
-			if err != nil {
-				return err
-			}
-			match := re.FindStringSubmatch(string(output))
-			if len(match) > 1 {
-				p.Version = match[1]
-			}
-			b.LdFlags = append(b.LdFlags,
-				fmt.Sprintf("-X '%s.version=%s'", p.Module, p.Version),
 			)
 		}
 		args = append(args,
