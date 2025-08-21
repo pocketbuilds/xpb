@@ -27,6 +27,10 @@ func Register(plugin Plugin) {
 	plugins = append(plugins, plugin)
 }
 
+func GetPlugins() []Plugin {
+	return plugins
+}
+
 func InitPlugins(app core.App) error {
 	var errs []error
 
@@ -46,7 +50,11 @@ func InitPlugins(app core.App) error {
 			err = plugin.Init(app)
 		}()
 		if err != nil {
-			errs = append(errs, newPluginError(plugin, err))
+			errs = append(errs, fmt.Errorf(
+				"error from plugin %s: %w",
+				plugin.Name(),
+				err,
+			))
 		}
 	}
 
@@ -55,16 +63,4 @@ func InitPlugins(app core.App) error {
 	}
 
 	return nil
-}
-
-func GetPlugins() []Plugin {
-	return plugins
-}
-
-func newPluginError(plugin Plugin, err error) error {
-	return fmt.Errorf(
-		"error from plugin %s: %w",
-		plugin.Name(),
-		err,
-	)
 }
