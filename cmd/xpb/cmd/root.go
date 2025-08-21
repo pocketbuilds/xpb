@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/PocketBuilds/xpb"
+	"github.com/pocketbuilds/xpb"
 	"github.com/spf13/cobra"
 )
 

@@ -1,3 +1,3 @@
 package main
 
-import _ "github.com/PocketBuilds/xpb/pkg/plugins/cmd/defaults"
+import _ "github.com/pocketbuilds/xpb/pkg/plugins/cmd/defaults"

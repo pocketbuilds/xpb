@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/PocketBuilds/xpb/cmd/xpb/cmd"
+	"github.com/pocketbuilds/xpb/cmd/xpb/cmd"
 )
 
 func main() {

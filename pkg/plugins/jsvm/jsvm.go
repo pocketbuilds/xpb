@@ -3,10 +3,10 @@ package jsvm
 import (
 	"os"
 
-	"github.com/PocketBuilds/xpb"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
+	"github.com/pocketbuilds/xpb"
 )
 
 func init() {

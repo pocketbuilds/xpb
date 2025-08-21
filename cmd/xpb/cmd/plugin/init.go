@@ -3,7 +3,7 @@ package plugin
 import (
 	"os"
 
-	"github.com/PocketBuilds/xpb/pkg/templates"
+	"github.com/pocketbuilds/xpb/pkg/templates"
 	"github.com/spf13/cobra"
 )
 

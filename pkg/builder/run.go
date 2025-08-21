@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/PocketBuilds/xpb/pkg/module"
-	"github.com/PocketBuilds/xpb/pkg/templates"
+	"github.com/pocketbuilds/xpb/pkg/module"
+	"github.com/pocketbuilds/xpb/pkg/templates"
 )
 
 func (b *Builder) Build() (r io.ReadCloser, err error) {

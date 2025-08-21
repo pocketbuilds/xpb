@@ -5,17 +5,17 @@ A [pocketbase](https://pocketbase.io/) builder inspired by [xcaddy](https://gith
 ### Dependencies
 - [Go 1.23+](https://go.dev/doc/install)
 ### Download a Release
-- Download the latest xpb release [here](https://github.com/PocketBuilds/xpb/releases)
+- Download the latest xpb release [here](https://github.com/pocketbuilds/xpb/releases)
 ### Use `go install`
 1. Install [Go](https://go.dev/doc/install).
 2. Follow [this guide](https://go.dev/doc/tutorial/compile-install) to add Go install directory to your system's shell path.
 3. Run the following command:
 ```
-go install github.com/PocketBuilds/xpb/cmd/xpb@latest
+go install github.com/pocketbuilds/xpb/cmd/xpb@latest
 ```
 4. Optionally to get the version command to properly work you need to add an ldflag to the command with the specified version you want:
 ```
-go install github.com/PocketBuilds/xpb/cmd@<version> -ldflags '-X github.com/PocketBuilds/xpb.version=<version>'
+go install github.com/pocketbuilds/xpb/cmd@<version> -ldflags '-X github.com/pocketbuilds/xpb.version=<version>'
 ```
 ## Using the builder
 ```

@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/PocketBuilds/xpb/pkg/builder"
-	"github.com/PocketBuilds/xpb/pkg/module"
+	"github.com/pocketbuilds/xpb/pkg/builder"
+	"github.com/pocketbuilds/xpb/pkg/module"
 	"github.com/spf13/cobra"
 )
 

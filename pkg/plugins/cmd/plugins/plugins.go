@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/PocketBuilds/xpb"
-	"github.com/PocketBuilds/xpb/pkg/plugins/cmd"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbuilds/xpb"
+	"github.com/pocketbuilds/xpb/pkg/plugins/cmd"
 	"github.com/spf13/cobra"
 )
 

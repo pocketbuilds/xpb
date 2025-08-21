@@ -1,4 +1,4 @@
-module github.com/PocketBuilds/xpb
+module github.com/pocketbuilds/xpb
 
 go 1.23
 

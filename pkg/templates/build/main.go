@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/PocketBuilds/xpb"
 	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbuilds/xpb"
 )
 
 func main() {

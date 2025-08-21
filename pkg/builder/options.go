@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/PocketBuilds/xpb/pkg/module"
+	"github.com/pocketbuilds/xpb/pkg/module"
 )
 
 func WithArch(arch string) BuilderOption {

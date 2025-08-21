@@ -1,6 +1,6 @@
 package module
 
-const XpbModule = "github.com/PocketBuilds/xpb"
+const XpbModule = "github.com/pocketbuilds/xpb"
 
 func WithXpbModule() ModuleOption {
 	return func(m *Module) error {

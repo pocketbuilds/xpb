@@ -2,4 +2,4 @@
 
 package main
 
-import _ "github.com/PocketBuilds/xpb/pkg/plugins/migratecmd"
+import _ "github.com/pocketbuilds/xpb/pkg/plugins/migratecmd"

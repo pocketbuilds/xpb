@@ -5,9 +5,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/PocketBuilds/xpb/pkg/module"
-	"github.com/PocketBuilds/xpb/pkg/rules"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/pocketbuilds/xpb/pkg/module"
+	"github.com/pocketbuilds/xpb/pkg/rules"
 )
 
 type Builder struct {

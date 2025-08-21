@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/PocketBuilds/xpb"
+	"github.com/pocketbuilds/xpb"
 	"github.com/spf13/cobra"
 )
 

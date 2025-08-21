@@ -2,4 +2,4 @@
 
 package main
 
-import _ "github.com/PocketBuilds/xpb/pkg/plugins/public_dir"
+import _ "github.com/pocketbuilds/xpb/pkg/plugins/public_dir"
