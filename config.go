@@ -15,16 +15,7 @@ import (
 
 func LoadConfig(app core.App) (err error) {
 
-	var dir = filepath.Dir(os.Args[0])
-
-	if strings.HasPrefix(os.Args[0], os.TempDir()) {
-		dir, err = os.Getwd()
-		if err != nil {
-			return err
-		}
-	}
-
-	var defaultFilePath = filepath.Join(dir, "pocketbuilds.toml")
+	defaultFilePath := filepath.Join(app.DataDir(), "../pocketbuilds.toml")
 
 	var fp = defaultFilePath
 
