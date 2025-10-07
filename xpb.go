@@ -6,8 +6,8 @@ import (
 
 func Setup(app core.App) error {
 	stages := []func(core.App) error{
-		LoadConfig,
 		PreValidatePlugins,
+		LoadConfig,
 		ValidatePlugins,
 		InitPlugins,
 	}

@@ -44,7 +44,7 @@ func PreValidatePlugins(app core.App) error {
 	}
 
 	if len(errs) != 0 {
-		return fmt.Errorf("error(s) during load: %w", errors.Join(errs...))
+		return fmt.Errorf("error(s) during prevalidate step: %w", errors.Join(errs...))
 	}
 
 	return nil
@@ -82,7 +82,7 @@ func ValidatePlugins(app core.App) error {
 	}
 
 	if len(errs) != 0 {
-		return fmt.Errorf("error(s) during load: %w", errors.Join(errs...))
+		return fmt.Errorf("error(s) during validation step: %w", errors.Join(errs...))
 	}
 
 	return nil
