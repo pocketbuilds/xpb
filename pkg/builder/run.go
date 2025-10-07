@@ -17,6 +17,7 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 	const binFileName = "pocketbase"
 
 	steps := []func() error{
+		b.printGoInfo,
 		b.copyBuildTemplate,
 		b.runGoModInit,
 		b.handleGoModReplacements,
@@ -36,6 +37,15 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 	}
 
 	return b.buildResult(path.Join(b.dir, binFileName))
+}
+
+func (b *Builder) printGoInfo() error {
+	cmd := b.newCommand("go", "env", "GOPATH")
+	fmt.Fprintf(b.stdout, "%s\n", cmd)
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (b *Builder) copyBuildTemplate() error {
