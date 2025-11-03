@@ -27,6 +27,7 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 		b.addPocketbaseVersionLdFlag,
 		b.addXpbVersionLdFlag,
 		b.addPluginVersionsLdFlag,
+		b.addOptimizationLdFlags,
 		b.runGoBuild(binFileName),
 	}
 
@@ -214,6 +215,13 @@ func (b *Builder) addPluginVersionsLdFlag() error {
 			fmt.Sprintf("-X '%s.version=%s'", p.Module, match[1]),
 		)
 	}
+	return nil
+}
+
+func (b *Builder) addOptimizationLdFlags() error {
+	b.LdFlags = append(b.LdFlags,
+		"-s", "-w",
+	)
 	return nil
 }
 
