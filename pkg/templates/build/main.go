@@ -8,13 +8,9 @@ import (
 )
 
 func main() {
-	var app = pocketbase.New()
+	app := pocketbase.New()
 
-	if err := xpb.LoadConfig(app); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := xpb.InitPlugins(app); err != nil {
+	if err := xpb.Setup(app); err != nil {
 		log.Fatal(err)
 	}
 
