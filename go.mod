@@ -5,6 +5,7 @@ go 1.23
 require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/caarlos0/env/v11 v11.3.1
+	github.com/dop251/goja v0.0.0-20241009100908-5f46f2705ca3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/pocketbase/pocketbase v0.23.0
 	github.com/spf13/cobra v1.8.1
@@ -36,7 +37,6 @@ require (
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/domodwyer/mailyak/v3 v3.6.2 // indirect
 	github.com/dop251/base64dec v0.0.0-20231022112746-c6c9f9a96217 // indirect
-	github.com/dop251/goja v0.0.0-20241009100908-5f46f2705ca3 // indirect
 	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect

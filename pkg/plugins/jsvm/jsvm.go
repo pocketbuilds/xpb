@@ -1,8 +1,10 @@
 package jsvm
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/dop251/goja"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
@@ -63,18 +65,22 @@ type Plugin struct {
 	TypesDir string
 }
 
+// Name implements [xpb.Plugin.Name] interface method.
 func (p *Plugin) Name() string {
 	return "jsvm"
 }
 
+// Version implements [xpb.Plugin.Version] interface method.
 func (p *Plugin) Version() string {
 	return xpb.Version()
 }
 
+// Description implements [xpb.Plugin.Description] interface method.
 func (p *Plugin) Description() string {
 	return "The built-in pocketbase jsvm plugin included as an xpb plugin."
 }
 
+// Init implements [xpb.Plugin.Init] interface method.
 func (p *Plugin) Init(app core.App) error {
 
 	if app, ok := app.(*pocketbase.PocketBase); ok {
@@ -111,7 +117,23 @@ func (p *Plugin) Init(app core.App) error {
 		MigrationsDir:          p.MigrationsDir,
 		MigrationsFilesPattern: p.MigrationsFilesPattern,
 		TypesDir:               p.TypesDir,
+		OnInit:                 p.jsvmInitHandler(app),
 	})
 
 	return nil
+}
+
+type JsvmPlugin interface {
+	OnJsvmInit(app core.App, vm *goja.Runtime)
+}
+
+func (p *Plugin) jsvmInitHandler(app core.App) func(vm *goja.Runtime) {
+	return func(vm *goja.Runtime) {
+		for _, plugin := range xpb.GetPlugins() {
+			if jsvmPlugin, ok := plugin.(JsvmPlugin); ok {
+				fmt.Println(plugin.Name())
+				jsvmPlugin.OnJsvmInit(app, vm)
+			}
+		}
+	}
 }
