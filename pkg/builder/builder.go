@@ -3,7 +3,7 @@ package builder
 import (
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/pocketbuilds/xpb/pkg/module"
@@ -80,14 +80,19 @@ func (b Builder) Validate() error {
 	)
 }
 
-func (b *Builder) BuildToAbsoluteFilepath(filepath string) error {
+func (b *Builder) BuildToFile(path string) error {
+	absFilePath, err := filepath.Abs(path)
+	if err != nil {
+		return err
+	}
+
 	rc, err := b.Build()
 	if err != nil {
 		return err
 	}
 	defer rc.Close()
 
-	file, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
+	file, err := os.OpenFile(absFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}
@@ -95,13 +100,4 @@ func (b *Builder) BuildToAbsoluteFilepath(filepath string) error {
 
 	_, err = io.Copy(file, rc)
 	return err
-}
-
-func (b *Builder) BuildToRelativeFilepath(filepath string) error {
-	wd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	return b.BuildToAbsoluteFilepath(path.Join(wd, filepath))
 }

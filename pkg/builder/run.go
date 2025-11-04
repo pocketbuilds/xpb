@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -37,7 +37,7 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 		}
 	}
 
-	return b.buildResult(path.Join(b.dir, binFileName))
+	return b.buildResult(filepath.Join(b.dir, binFileName))
 }
 
 func (b *Builder) printGoInfo() error {
@@ -63,13 +63,12 @@ func (b *Builder) runGoModInit() error {
 }
 
 func (b *Builder) handleGoModReplacements() error {
-	wd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
 	for _, module := range b.Plugins {
 		if module.Replacement != "" {
-			replacement := path.Join(wd, module.Replacement)
+			replacement, err := filepath.Abs(module.Replacement)
+			if err != nil {
+				return err
+			}
 			cmd := b.newCommand(
 				"go", "mod", "edit",
 				"-replace", module.Module+"="+replacement,
@@ -99,11 +98,10 @@ func (b *Builder) runGoGetPocketbaseAtSpecifiedVersion() error {
 		return err
 	}
 	if b.Pocketbase.Replacement != "" {
-		wd, err := os.Getwd()
+		replacement, err := filepath.Abs(b.Pocketbase.Replacement)
 		if err != nil {
 			return err
 		}
-		replacement := path.Join(wd, b.Pocketbase.Replacement)
 		cmd := b.newCommand(
 			"go", "mod", "edit",
 			"-replace", b.Pocketbase.Module+"="+replacement,
@@ -123,11 +121,10 @@ func (b *Builder) runGoGetXpbAtSpecifiedVersion() error {
 		return err
 	}
 	if b.Xpb.Replacement != "" {
-		wd, err := os.Getwd()
+		replacement, err := filepath.Abs(b.Xpb.Replacement)
 		if err != nil {
 			return err
 		}
-		replacement := path.Join(wd, b.Xpb.Replacement)
 		cmd := b.newCommand(
 			"go", "mod", "edit",
 			"-replace", b.Xpb.Module+"="+replacement,

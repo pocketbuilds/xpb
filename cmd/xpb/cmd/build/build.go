@@ -71,7 +71,7 @@ var BuildCmd = func() *cobra.Command {
 				return err
 			}
 
-			return b.BuildToRelativeFilepath(output)
+			return b.BuildToFile(output)
 		},
 	}
 
