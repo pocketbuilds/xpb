@@ -25,8 +25,13 @@ func (m Module) Validate() error {
 		validation.Field(&m.Module,
 			validation.Required,
 		),
-		validation.Field(&m.Version,
-			validation.Required,
-		),
 	)
+}
+
+func (m Module) String() string {
+	str := m.Module
+	if m.Version != "" && m.Version != "latest" {
+		str += "@" + m.Version
+	}
+	return str
 }

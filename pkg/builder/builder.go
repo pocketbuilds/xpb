@@ -31,12 +31,10 @@ type BuilderOption func(b *Builder) error
 func NewBuilder(opts ...BuilderOption) (*Builder, error) {
 	var b = Builder{
 		Xpb: &module.Module{
-			Module:  module.XpbModule,
-			Version: "latest",
+			Module: module.XpbModule,
 		},
 		Pocketbase: &module.Module{
-			Module:  module.PocketbaseModule,
-			Version: "latest",
+			Module: module.PocketbaseModule,
 		},
 		stdout: os.Stdout,
 		stderr: os.Stderr,

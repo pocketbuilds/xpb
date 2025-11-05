@@ -20,14 +20,10 @@ func (b *Builder) Build() (r io.ReadCloser, err error) {
 		b.printGoInfo,
 		b.copyBuildTemplate,
 		b.runGoModInit,
-		b.handleGoModReplacements,
-		b.runGoModTidy,
-		b.runGoGetPocketbaseAtSpecifiedVersion,
-		b.runGoGetXpbAtSpecifiedVersion,
-		b.addPocketbaseVersionLdFlag,
-		b.addXpbVersionLdFlag,
-		b.addPluginVersionsLdFlag,
+		b.runGoGetForAllModules,
+		b.handleModuleReplacements,
 		b.addOptimizationLdFlags,
+		b.addVersionLdFlags,
 		b.runGoBuild(binFileName),
 	}
 
@@ -62,155 +58,60 @@ func (b *Builder) runGoModInit() error {
 	return nil
 }
 
-func (b *Builder) handleGoModReplacements() error {
+func (b *Builder) runGoGetForAllModules() error {
+
+	cmd := b.newCommand("go", "get", "-v", b.Pocketbase.String())
+	fmt.Fprintf(b.stdout, "%s\n", cmd)
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	// Including pocketbase in all go get commands to ensure go toolkit does not
+	//   silently bump the pocketbase module version. See xcaddy issue below:
+	// https://github.com/caddyserver/xcaddy/issues/54
+
+	cmd = b.newCommand("go", "get", "-v", b.Pocketbase.String(), b.Xpb.String())
+	fmt.Fprintf(b.stdout, "%s\n", cmd)
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
 	for _, module := range b.Plugins {
-		if module.Replacement != "" {
-			replacement, err := filepath.Abs(module.Replacement)
-			if err != nil {
-				return err
-			}
-			cmd := b.newCommand(
-				"go", "mod", "edit",
-				"-replace", module.Module+"="+replacement,
-			)
-			fmt.Fprintf(b.stdout, "%s\n", cmd)
-			if err := cmd.Run(); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
-func (b *Builder) runGoModTidy() error {
-	cmd := b.newCommand("go", "mod", "tidy", "-v")
-	fmt.Fprintf(b.stdout, "%s\n", cmd)
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (b *Builder) runGoGetPocketbaseAtSpecifiedVersion() error {
-	cmd := b.newCommand("go", "get", "-v", b.Pocketbase.Module+"@"+b.Pocketbase.Version)
-	fmt.Fprintf(b.stdout, "%s\n", cmd)
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	if b.Pocketbase.Replacement != "" {
-		replacement, err := filepath.Abs(b.Pocketbase.Replacement)
-		if err != nil {
-			return err
-		}
-		cmd := b.newCommand(
-			"go", "mod", "edit",
-			"-replace", b.Pocketbase.Module+"="+replacement,
-		)
+		cmd = b.newCommand("go", "get", "-v", b.Pocketbase.String(), b.Xpb.String(), module.String())
 		fmt.Fprintf(b.stdout, "%s\n", cmd)
 		if err := cmd.Run(); err != nil {
 			return err
 		}
 	}
-	return nil
-}
 
-func (b *Builder) runGoGetXpbAtSpecifiedVersion() error {
-	cmd := b.newCommand("go", "get", "-v", b.Xpb.Module+"@"+b.Xpb.Version)
+	// https://github.com/caddyserver/xcaddy/pull/92
+	cmd = b.newCommand("go", "get")
 	fmt.Fprintf(b.stdout, "%s\n", cmd)
 	if err := cmd.Run(); err != nil {
 		return err
 	}
-	if b.Xpb.Replacement != "" {
-		replacement, err := filepath.Abs(b.Xpb.Replacement)
-		if err != nil {
-			return err
-		}
-		cmd := b.newCommand(
-			"go", "mod", "edit",
-			"-replace", b.Xpb.Module+"="+replacement,
-		)
-		fmt.Fprintf(b.stdout, "%s\n", cmd)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
-	} else {
-		cmd := b.newCommand("go", "list", "-m", "all")
-		fmt.Fprintf(b.stdout, "%s\n", cmd)
-		cmd.Stdout = nil
-		output, err := cmd.Output()
-		if err != nil {
-			return err
-		}
-		re := regexp.MustCompile(module.XpbModule + " (.+)")
-		match := re.FindStringSubmatch(string(output))
-		if len(match) > 1 {
-			b.Xpb.Version = match[1]
-		}
-	}
+
 	return nil
 }
 
-func (b *Builder) addPocketbaseVersionLdFlag() error {
-	cmd := b.newCommand("go", "list", "-m", "all")
-	cmd.Stdout = nil
-	output, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	re, err := regexp.Compile(b.Pocketbase.Module + " (.+)")
-	if err != nil {
-		return err
-	}
-	match := re.FindStringSubmatch(string(output))
-	if match == nil {
-		return nil
-	}
-	b.LdFlags = append(b.LdFlags,
-		fmt.Sprintf("-X '%s.version=%s'", b.Pocketbase.Module, match[1]),
-	)
-	return nil
-}
-
-func (b *Builder) addXpbVersionLdFlag() error {
-	cmd := b.newCommand("go", "list", "-m", "all")
-	cmd.Stdout = nil
-	output, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	re, err := regexp.Compile(b.Xpb.Module + " (.+)")
-	if err != nil {
-		return err
-	}
-	match := re.FindStringSubmatch(string(output))
-	if match == nil {
-		return nil
-	}
-	b.LdFlags = append(b.LdFlags,
-		fmt.Sprintf("-X '%s.version=%s'", b.Xpb.Module, match[1]),
-	)
-	return nil
-}
-
-func (b *Builder) addPluginVersionsLdFlag() error {
-	cmd := b.newCommand("go", "list", "-m", "all")
-	cmd.Stdout = nil
-	output, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	for _, p := range b.Plugins {
-		re, err := regexp.Compile(p.Module + " (.+)")
-		if err != nil {
-			return err
-		}
-		match := re.FindStringSubmatch(string(output))
-		if match == nil {
+func (b *Builder) handleModuleReplacements() error {
+	allModules := append([]*module.Module{b.Pocketbase, b.Xpb}, b.Plugins...)
+	for _, module := range allModules {
+		if module.Replacement == "" {
 			continue
 		}
-		b.LdFlags = append(b.LdFlags,
-			fmt.Sprintf("-X '%s.version=%s'", p.Module, match[1]),
+		replacement, err := filepath.Abs(module.Replacement)
+		if err != nil {
+			return err
+		}
+		cmd := b.newCommand(
+			"go", "mod", "edit",
+			"-replace", module.Module+"="+replacement,
 		)
+		fmt.Fprintf(b.stdout, "%s\n", cmd)
+		if err := cmd.Run(); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -219,6 +120,30 @@ func (b *Builder) addOptimizationLdFlags() error {
 	b.LdFlags = append(b.LdFlags,
 		"-s", "-w",
 	)
+	return nil
+}
+
+func (b *Builder) addVersionLdFlags() error {
+	cmd := b.newCommand("go", "list", "-m", "all")
+	cmd.Stdout = nil
+	output, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	allModules := append([]*module.Module{b.Pocketbase, b.Xpb}, b.Plugins...)
+	for _, module := range allModules {
+		re, err := regexp.Compile(module.Module + " (.+)+")
+		if err != nil {
+			return err
+		}
+		match := re.FindStringSubmatch(string(output))
+		if match == nil {
+			return nil
+		}
+		b.LdFlags = append(b.LdFlags,
+			fmt.Sprintf("-X '%s.version=%s'", module.Module, match[1]),
+		)
+	}
 	return nil
 }
 
