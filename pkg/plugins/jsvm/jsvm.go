@@ -1,7 +1,6 @@
 package jsvm
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/dop251/goja"
@@ -131,7 +130,6 @@ func (p *Plugin) jsvmInitHandler(app core.App) func(vm *goja.Runtime) {
 	return func(vm *goja.Runtime) {
 		for _, plugin := range xpb.GetPlugins() {
 			if jsvmPlugin, ok := plugin.(JsvmPlugin); ok {
-				fmt.Println(plugin.Name())
 				jsvmPlugin.OnJsvmInit(app, vm)
 			}
 		}
