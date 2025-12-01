@@ -33,9 +33,9 @@ func (p *Plugin) Version() string {
 }
 
 func (p *Plugin) Description() string {
-	desc := "The built-in xpb commands including:\n"
+	desc := "The built-in xpb commands include:\n"
 	for _, c := range p.children {
-		desc += fmt.Sprintf("  %s.%s (%s)\n%s\n", p.Name(), c.Name(), c.Version(), c.Description())
+		desc += fmt.Sprintf("    %s.%s (%s)\n      %s\n", p.Name(), c.Name(), c.Version(), c.Description())
 	}
 	return desc
 }

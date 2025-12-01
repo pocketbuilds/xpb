@@ -21,7 +21,7 @@ type Plugin struct {
 }
 
 func (p *Plugin) Name() string {
-	return xpb.Version()
+	return "version"
 }
 
 func (p *Plugin) Version() string {
