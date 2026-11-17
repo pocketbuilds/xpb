@@ -9,8 +9,8 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/caarlos0/env/v11"
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
 )
 
 func LoadConfig(app core.App) (err error) {

@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
 	"github.com/pocketbuilds/xpb"
 	"github.com/pocketbuilds/xpb/pkg/plugins/cmd"
 	"github.com/spf13/cobra"

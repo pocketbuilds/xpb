@@ -4,9 +4,9 @@ import (
 	"os"
 
 	"github.com/dop251/goja"
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/plugins/jsvm"
+	"ganigeorgiev.com/pocketbase/pocketbase"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase/plugins/jsvm"
 	"github.com/pocketbuilds/xpb"
 )
 

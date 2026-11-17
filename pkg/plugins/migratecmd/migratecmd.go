@@ -3,9 +3,9 @@ package migratecmd
 import (
 	"os"
 
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+	"ganigeorgiev.com/pocketbase/pocketbase"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase/plugins/migratecmd"
 	"github.com/pocketbuilds/xpb"
 )
 
