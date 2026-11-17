@@ -1,6 +1,6 @@
 package module
 
-import validation "github.com/go-ozzo/ozzo-validation/v4"
+import validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
 
 type Module struct {
 	Module      string `json:"module"`

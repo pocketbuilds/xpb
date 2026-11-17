@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
+	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
 	"ganigeorgiev.com/pocketbase/pocketbase/core"
 )
 

@@ -3,18 +3,17 @@ module github.com/pocketbuilds/xpb
 go 1.27
 
 require (
+	ganigeorgiev.com/pocketbase/ozzo-validation/v4 v4.4.1
 	ganigeorgiev.com/pocketbase/pocketbase v0.41.1
 	github.com/BurntSushi/toml v1.4.0
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/dop251/goja v0.0.0-20261023121931-6ace4dde0b29
-	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/spf13/cobra v1.10.2
 )
 
 require (
 	ganigeorgiev.com/fexpr v0.7.0 // indirect
 	ganigeorgiev.com/pocketbase/dbx v1.13.0 // indirect
-	ganigeorgiev.com/pocketbase/ozzo-validation/v4 v4.4.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/dlclark/regexp2/v2 v2.9.1 // indirect
