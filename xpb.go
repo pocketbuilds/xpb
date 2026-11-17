@@ -1,7 +1,7 @@
 package xpb
 
 import (
-	"github.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
 )
 
 func Setup(app core.App) error {

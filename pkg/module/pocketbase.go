@@ -1,6 +1,6 @@
 package module
 
-const PocketbaseModule = "github.com/pocketbase/pocketbase"
+const PocketbaseModule = "ganigeorgiev.com/pocketbase/pocketbase"
 
 func WithPocketbaseModule() ModuleOption {
 	return func(m *Module) error {

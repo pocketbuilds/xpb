@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
 )
 
 type Plugin interface {

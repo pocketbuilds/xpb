@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/tools/hook"
+	"ganigeorgiev.com/pocketbase/pocketbase"
+	"ganigeorgiev.com/pocketbase/pocketbase/apis"
+	"ganigeorgiev.com/pocketbase/pocketbase/core"
+	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
 	"github.com/pocketbuilds/xpb"
 )
 
@@ -60,7 +60,7 @@ func (p *Plugin) Init(app core.App) error {
 		app.RootCmd.ParseFlags(os.Args[1:])
 	}
 
-	// https://github.com/pocketbase/pocketbase/blob/f5c6b9652ffae8b2cffaa4d08430a2d955f2ad4e/examples/base/main.go#L106C1-L107C68
+	// https://ganigeorgiev.com/pocketbase/pocketbase/blob/f5c6b9652ffae8b2cffaa4d08430a2d955f2ad4e/examples/base/main.go#L106C1-L107C68
 	//
 	// static route to serves files from the provided public dir
 	// (if publicDir exists and the route path is not already defined)
@@ -77,7 +77,7 @@ func (p *Plugin) Init(app core.App) error {
 	return nil
 }
 
-// https://github.com/pocketbase/pocketbase/blob/f5c6b9652ffae8b2cffaa4d08430a2d955f2ad4e/examples/base/main.go#L124
+// https://ganigeorgiev.com/pocketbase/pocketbase/blob/f5c6b9652ffae8b2cffaa4d08430a2d955f2ad4e/examples/base/main.go#L124
 //
 // the default pb_public dir location is relative to the executable
 func defaultPublicDir() string {
